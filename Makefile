@@ -1,5 +1,8 @@
 CC = gcc
-CFLAGS = -g -O0 -Wall -Wextra -Werror -Wpedantic -I$(INCLUDE_DIR)
+CFLAGS = -std=c23 -g -O0 \
+	-Wall -Wextra -Werror -Wpedantic \
+	-fsanitize=address \
+	-I$(INCLUDE_DIR)
 
 SRC_DIR = src
 INCLUDE_DIR = include
@@ -12,14 +15,14 @@ OBJECTS = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SOURCES))
 TARGET = $(BUILD_DIR)/pthreads-simulator
 
 $(TARGET) : $(OBJECTS)
-	mkdir -p $(BUILD_DIR)
-	$(CC) $(CFLAGS) -o $@ $^
+	@mkdir -p $(BUILD_DIR)
+	@$(CC) $(CFLAGS) -o $@ $^
 
 $(OBJ_DIR)/%.o : $(SRC_DIR)/%.c
-	mkdir -p $(OBJ_DIR)
-	$(CC) $(CFLAGS) -c $< -o $@
+	@mkdir -p $(OBJ_DIR)
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 .PHONY: clean
 
 clean:
-	rm -f $(TARGET) $(OBJECTS)
+	@rm -f $(TARGET) $(OBJECTS)
